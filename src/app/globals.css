@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas-base: #050A1A;
+  --canvas-surface: #0A112A;
+  --canvas-active: #10193A;
+  --brand-accent: #00E575;
+  --brand-blue: #1E3A8A;
+  --brand-cyan: #06B6D4;
+  --type-primary: #EDEDED;
+  --type-secondary: #7A849F;
+  --type-mono: #94A3B8;
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border-active: rgba(0, 229, 117, 0.4);
+}
+
+/* Failsafe 1: Never place overflow-x: hidden on parent containers that hold position: sticky. Use overflow-x: clip */
+html {
+  background-color: #050A1A;
+  color: #EDEDED;
+  overflow-x: clip;
+}
+
+body {
+  background-color: #050A1A;
+  color: #EDEDED;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Lenis Virtual Scroll Integration */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Custom Selection in Electric Green */
+::selection {
+  background-color: #00E575;
+  color: #050A1A;
+}
+
+/* Custom Hairline Borders */
+.border-hairline {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.border-active-glow {
+  border-color: rgba(0, 229, 117, 0.4);
+  box-shadow: 0 0 20px -5px rgba(0, 229, 117, 0.3);
+}
+
+/* Zero-Margin Breakout for Mobile Video */
+.edge-bleed-mobile {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Subtle scanline / film grain effect overlay */
+.film-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
