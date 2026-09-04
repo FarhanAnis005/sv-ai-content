@@ -316,7 +316,6 @@ function MobileShowcaseSlide({
 export function ShowcaseSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(true);
-  const [activeChapter, setActiveChapter] = useState(0);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
@@ -336,29 +335,6 @@ export function ShowcaseSection() {
     damping: 26,
     restDelta: 0.001,
   });
-
-  // Track active chapter for the Apple Pill Scrubber
-  useEffect(() => {
-    return smoothProgress.on("change", (v) => {
-      if (v < 0.33) {
-        setActiveChapter(0);
-      } else if (v < 0.66) {
-        setActiveChapter(1);
-      } else {
-        setActiveChapter(2);
-      }
-    });
-  }, [smoothProgress]);
-
-  const handleJumpToChapter = (chapterIndex: number) => {
-    if (!containerRef.current) return;
-    const targets = [0.05, 0.45, 0.85];
-    const top =
-      containerRef.current.offsetTop +
-      (containerRef.current.scrollHeight - window.innerHeight) *
-        targets[chapterIndex];
-    window.scrollTo({ top, behavior: "smooth" });
-  };
 
   // ============================================================
   // DESKTOP KINETIC SIDE-SHIFT TRANSFORMS (>= 768px)
@@ -498,29 +474,6 @@ export function ShowcaseSection() {
         {/* Ambient Radial Vignette */}
         <div className="absolute inset-0 pointer-events-none z-0 bg-radial from-transparent via-[#050A1A]/30 to-[#050A1A]/85" />
 
-        {/* Apple-Style Glass Chapter Pill Scrubber (Desktop Only) */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto hidden md:flex items-center gap-1.5 p-1.5 rounded-full bg-[#050A1A]/80 backdrop-blur-xl border border-white/10 shadow-2xl">
-          {SHOWCASE_ITEMS.map((item, idx) => (
-            <button
-              key={item.slug}
-              onClick={() => handleJumpToChapter(idx)}
-              className={`px-4 py-1.5 rounded-full font-mono text-xs transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                activeChapter === idx
-                  ? "bg-[#00E575]/15 text-[#00E575] border border-[#00E575]/40 shadow-[0_0_12px_rgba(0,229,117,0.25)] font-semibold"
-                  : "text-slate-400 hover:text-white border border-transparent"
-              }`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  activeChapter === idx
-                    ? "bg-[#00E575] animate-pulse"
-                    : "bg-slate-500"
-                }`}
-              />
-              <span>{item.category.replace(/^\d+\s*\/\/\s*/, "")}</span>
-            </button>
-          ))}
-        </div>
 
         {/* ============================================================ */}
         {/* SLIDE 0: Synthetic Humans                                   */}
