@@ -97,8 +97,7 @@ export function Footer() {
           </h2>
 
           <p className="text-type-secondary text-base sm:text-lg font-sans leading-relaxed">
-            Select your project parameters. Our creative directors will review your
-            requirements and respond within 12 hours with feasibility and scoping.
+            Direct production intake. Initial feasibility within 12 hours.
           </p>
         </div>
 

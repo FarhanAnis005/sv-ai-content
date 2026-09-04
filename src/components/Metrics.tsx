@@ -12,23 +12,23 @@ interface MetricItem {
 const METRICS: MetricItem[] = [
   {
     value: "88%",
-    label: "Cost Reduction",
-    detail: "Measured against traditional physical set and travel budgets",
+    label: "Cost Efficiency",
+    detail: "Zero physical set or travel overhead.",
   },
   {
     value: "10x",
-    label: "Faster Delivery",
-    detail: "From script approval to high-fidelity commercial master delivery",
+    label: "Delivery Velocity",
+    detail: "Script to final commercial master.",
   },
   {
     value: "0 kg",
     label: "Carbon Footprint",
-    detail: "Eliminating diesel generators, flights, and set construction",
+    detail: "Zero travel. Zero physical waste.",
   },
   {
     value: "8K DCI",
-    label: "Master Quality",
-    detail: "Pristine deliverables for IMAX, broadcast, and vertical social",
+    label: "Cinema Master",
+    detail: "IMAX, theatrical, and global streaming.",
   },
 ];
 
@@ -57,19 +57,15 @@ export function Metrics() {
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         {/* Section Header */}
-        <div className="flex flex-col gap-4 mb-16 max-w-2xl">
+        <div className="flex flex-col gap-3 mb-14 max-w-2xl">
           <div className="w-max">
             <TerminalBadge variant="accent">
-              Proven Impact
+              Scale & Impact
             </TerminalBadge>
           </div>
           <h2 className="font-display font-bold text-3xl sm:text-5xl text-type-primary tracking-tight">
-            Setting a new standard for creative production.
+            Creative scale, measured.
           </h2>
-          <p className="text-type-secondary text-base leading-relaxed">
-            By eliminating physical logistical overhead, we redirect your budget
-            directly into visual fidelity and narrative impact.
-          </p>
         </div>
 
         {/* Elegant Metric Grid */}

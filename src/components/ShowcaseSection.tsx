@@ -25,10 +25,9 @@ const SHOWCASE_ITEMS: ShowcaseData[] = [
   {
     slug: "synthetic-humans",
     category: "01 // SYNTHETIC HUMANS",
-    title: "Digital Actors. Limitless Expression.",
-    description:
-      "Bespoke digital talent and likeness replication for global brand campaigns. Real-time emotion mapping, flawless lip synchronization across 32 languages, and consistent character continuity.",
-    specs: ["Custom LoRA", "4K Facial Mesh", "32+ Languages"],
+    title: "Digital Actors. Real Emotion.",
+    description: "Photoreal likeness. 32 languages. Zero uncanny valley.",
+    specs: ["4K Facial Detail", "Emotion Mapping", "Global Voice"],
     videoSrc: "/videos/unit01-synthetic.mp4",
     posterSrc: "/assets/unit01-poster.jpg",
     reverse: false,
@@ -36,10 +35,9 @@ const SHOWCASE_ITEMS: ShowcaseData[] = [
   {
     slug: "neural-environments",
     category: "02 // NEURAL ENVIRONMENTS",
-    title: "Locations Unbound by Physical Law.",
-    description:
-      "Photorealistic terrains, ancient historical architecture, and hazardous outer-world environments generated without travel budgets, location fees, or weather delays. Volumetric depth at scale.",
-    specs: ["Gaussian Splatting", "Volumetric NeRF", "Dynamic Lighting"],
+    title: "Worlds Without Maps.",
+    description: "Ancient eras to outer orbits. No travel. No permits.",
+    specs: ["Neural Depth", "Gaussian Volumes", "Dynamic Sun"],
     videoSrc: "/videos/unit02-environments.mp4",
     posterSrc: "/assets/unit02-poster.jpg",
     reverse: true,
@@ -47,10 +45,10 @@ const SHOWCASE_ITEMS: ShowcaseData[] = [
   {
     slug: "dynamic-physics",
     category: "03 // DYNAMIC PHYSICS",
-    title: "Cinematic Chaos on Demand.",
+    title: "Controlled Chaos.",
     description:
-      "High-impact vehicle crashes, liquid simulations, and architectural destruction rendered at a fraction of traditional physical rig costs without safety hazards or reshoot penalties.",
-    specs: ["Fluid Dynamics", "Unreal Engine 5", "8K DCI Master"],
+      "High-velocity destruction and fluid dynamics. Mastered in 8K DCI.",
+    specs: ["Fluid Dynamics", "Unreal Engine 5", "8K DCI"],
     videoSrc: "/videos/unit03-physics.mp4",
     posterSrc: "/assets/unit03-poster.jpg",
     reverse: false,

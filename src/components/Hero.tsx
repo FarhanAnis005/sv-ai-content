@@ -83,7 +83,7 @@ export function Hero({ onScrollClick }: HeroProps) {
           {/* Eyebrow Badge */}
           <div className="mb-5">
             <TerminalBadge variant="pulse">
-              AI Creative Production Studio
+              Creative Production Studio
             </TerminalBadge>
           </div>
 
@@ -97,10 +97,8 @@ export function Hero({ onScrollClick }: HeroProps) {
           </h1>
 
           {/* Sub-Headline: Clean Editorial Copy */}
-          <p className="mt-5 text-type-secondary text-[15px] sm:text-[17px] leading-[1.65] max-w-xl font-sans">
-            We combine director-level human artistry with generative neural
-            pipelines to produce cinema-grade visuals—without the physical
-            bottlenecks of traditional shoots.
+          <p className="mt-5 text-type-secondary text-base sm:text-lg leading-relaxed max-w-lg font-sans">
+            Cinema beyond physical limits. Directed by artists.
           </p>
         </div>
 
