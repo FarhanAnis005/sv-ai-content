@@ -62,16 +62,18 @@ interface DesktopShowcaseSlideProps {
   videoX: MotionValue<string>;
   videoScale: MotionValue<number>;
   videoOpacity: MotionValue<number>;
+  videoRadius: MotionValue<string>;
   textX: MotionValue<string>;
   textOpacity: MotionValue<number>;
   reverse?: boolean;
 }
 
 // ============================================================================
-// DESKTOP SLIDE (>= 768px): Apple Kinetic Side-Shift Theater
-// • Starts: Large Form Factor & Centered (x: 0%, scale: 1.0)
-// • On Scroll: Video glides to side (x: 24% or -24%, scale: 0.74)
-// • Text Reveal: In the cleared space, text fades & glides in
+// DESKTOP SLIDE (>= 768px): Full-Screen Edge-to-Edge Start & Kinetic Side Shift
+// • Starts: True Full Screen (w-screen h-[100dvh], scale: 1.0, borderRadius: 0px)
+// • On Scroll: Scales down to floating card (scale: 0.60), rounds corners (28px),
+//   glides to side (x: 22% or -22%)
+// • Text Reveal: In the opened space, text fades & glides in
 // ============================================================================
 function DesktopShowcaseSlide({
   item,
@@ -80,12 +82,13 @@ function DesktopShowcaseSlide({
   videoX,
   videoScale,
   videoOpacity,
+  videoRadius,
   textX,
   textOpacity,
   reverse = false,
 }: DesktopShowcaseSlideProps) {
   return (
-    <div className="relative z-10 w-full max-w-7xl mx-auto px-8 lg:px-12 flex items-center justify-center pointer-events-auto h-full">
+    <div className="relative z-10 w-full h-full flex items-center justify-center pointer-events-auto overflow-hidden">
       {/* 1. EDITORIAL TEXT: Appears in the opened negative space */}
       <motion.div
         style={{
@@ -94,8 +97,8 @@ function DesktopShowcaseSlide({
         }}
         className={`absolute ${
           reverse
-            ? "right-8 lg:right-16 text-left"
-            : "left-8 lg:left-16 text-left"
+            ? "right-10 lg:right-20 text-left"
+            : "left-10 lg:left-20 text-left"
         } max-w-md lg:max-w-lg z-20 flex flex-col justify-center will-change-transform transform-gpu`}
       >
         <div className="flex items-center gap-2 mb-2">
@@ -138,14 +141,15 @@ function DesktopShowcaseSlide({
         </Link>
       </motion.div>
 
-      {/* 2. THE CINEMA MONITOR: Starts large and centered, then shifts to the side */}
+      {/* 2. THE CINEMA MONITOR: Starts full-screen edge-to-edge, then shifts to the side */}
       <motion.div
         style={{
           x: videoX,
           scale: videoScale,
           opacity: videoOpacity,
+          borderRadius: videoRadius,
         }}
-        className="relative w-full max-w-[min(1152px,calc((100dvh-160px)*16/9))] aspect-video rounded-3xl overflow-hidden shadow-[0_35px_100px_rgba(0,0,0,0.95)] border border-white/15 bg-canvas-surface group will-change-transform transform-gpu"
+        className="relative w-screen h-[100dvh] max-w-none overflow-hidden shadow-[0_35px_100px_rgba(0,0,0,0.95)] border border-white/15 bg-canvas-surface group will-change-transform transform-gpu flex items-center justify-center"
       >
         {/* Ambient Backlight Bloom */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
@@ -165,12 +169,12 @@ function DesktopShowcaseSlide({
         </video>
 
         {/* Live HUD Badges */}
-        <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#050A1A]/85 backdrop-blur-md border border-white/10 text-xs font-mono text-white/90">
+        <div className="absolute top-6 left-6 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#050A1A]/85 backdrop-blur-md border border-white/10 text-xs font-mono text-white/90">
           <span className="w-2 h-2 rounded-full bg-[#00E575] animate-pulse" />
           <span>NEURAL RENDER // 4K</span>
         </div>
 
-        <div className="absolute bottom-4 right-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#050A1A]/85 backdrop-blur-md border border-white/10 text-xs font-mono text-slate-300">
+        <div className="absolute bottom-6 right-6 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#050A1A]/85 backdrop-blur-md border border-white/10 text-xs font-mono text-slate-300">
           <span>60 FPS • PRORES 4444</span>
         </div>
       </motion.div>
@@ -339,17 +343,22 @@ export function ShowcaseSection() {
   // ============================================================
   // DESKTOP KINETIC SIDE-SHIFT TRANSFORMS (>= 768px)
   //
-  // Chapter 0: Starts Large & Centered -> Shifts Right -> Text Reveals on Left
+  // Chapter 0: Starts Full-Screen & Centered -> Shifts Right & Contracts -> Text Reveals on Left
   // ============================================================
   const desktopVideo0X = useTransform(
     smoothProgress,
     [0.00, 0.08, 0.20, 0.30],
-    ["0%", "0%", "24%", "24%"]
+    ["0%", "0%", "22%", "22%"]
   );
   const desktopVideo0Scale = useTransform(
     smoothProgress,
     [0.00, 0.08, 0.20, 0.30],
-    [1.0, 1.0, 0.74, 0.74]
+    [1.0, 1.0, 0.60, 0.60]
+  );
+  const desktopVideo0Radius = useTransform(
+    smoothProgress,
+    [0.00, 0.08, 0.20, 0.30],
+    ["0px", "0px", "28px", "28px"]
   );
   const desktopVideo0Opacity = useTransform(
     smoothProgress,
@@ -367,7 +376,7 @@ export function ShowcaseSection() {
     [0, 0, 1.0, 1.0, 0]
   );
 
-  // Chapter 1: Enters Large & Centered -> Shifts Left -> Text Reveals on Right
+  // Chapter 1: Enters Full-Screen & Centered -> Shifts Left & Contracts -> Text Reveals on Right
   const desktopVideo1Opacity = useTransform(
     smoothProgress,
     [0.28, 0.34, 0.60, 0.66],
@@ -376,12 +385,17 @@ export function ShowcaseSection() {
   const desktopVideo1Scale = useTransform(
     smoothProgress,
     [0.28, 0.34, 0.42, 0.52],
-    [1.0, 1.0, 1.0, 0.74]
+    [1.0, 1.0, 1.0, 0.60]
   );
   const desktopVideo1X = useTransform(
     smoothProgress,
     [0.28, 0.34, 0.42, 0.52],
-    ["0%", "0%", "0%", "-24%"]
+    ["0%", "0%", "0%", "-22%"]
+  );
+  const desktopVideo1Radius = useTransform(
+    smoothProgress,
+    [0.28, 0.34, 0.42, 0.52],
+    ["0px", "0px", "0px", "28px"]
   );
   const desktopText1X = useTransform(
     smoothProgress,
@@ -394,7 +408,7 @@ export function ShowcaseSection() {
     [0, 1.0, 1.0, 0]
   );
 
-  // Chapter 2: Enters Large & Centered -> Shifts Right -> Text Reveals on Left
+  // Chapter 2: Enters Full-Screen & Centered -> Shifts Right & Contracts -> Text Reveals on Left
   const desktopVideo2Opacity = useTransform(
     smoothProgress,
     [0.62, 0.68],
@@ -403,12 +417,17 @@ export function ShowcaseSection() {
   const desktopVideo2Scale = useTransform(
     smoothProgress,
     [0.62, 0.72, 0.82],
-    [1.0, 1.0, 0.74]
+    [1.0, 1.0, 0.60]
   );
   const desktopVideo2X = useTransform(
     smoothProgress,
     [0.62, 0.72, 0.82],
-    ["0%", "0%", "24%"]
+    ["0%", "0%", "22%"]
+  );
+  const desktopVideo2Radius = useTransform(
+    smoothProgress,
+    [0.62, 0.72, 0.82],
+    ["0px", "0px", "28px"]
   );
   const desktopText2X = useTransform(
     smoothProgress,
@@ -487,6 +506,7 @@ export function ShowcaseSection() {
               videoX={desktopVideo0X}
               videoScale={desktopVideo0Scale}
               videoOpacity={desktopVideo0Opacity}
+              videoRadius={desktopVideo0Radius}
               textX={desktopText0X}
               textOpacity={desktopText0Opacity}
               reverse={false}
@@ -517,6 +537,7 @@ export function ShowcaseSection() {
               videoX={desktopVideo1X}
               videoScale={desktopVideo1Scale}
               videoOpacity={desktopVideo1Opacity}
+              videoRadius={desktopVideo1Radius}
               textX={desktopText1X}
               textOpacity={desktopText1Opacity}
               reverse={true}
@@ -547,6 +568,7 @@ export function ShowcaseSection() {
               videoX={desktopVideo2X}
               videoScale={desktopVideo2Scale}
               videoOpacity={desktopVideo2Opacity}
+              videoRadius={desktopVideo2Radius}
               textX={desktopText2X}
               textOpacity={desktopText2Opacity}
               reverse={false}
