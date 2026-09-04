@@ -45,96 +45,90 @@ export function ShowcaseItem({
   });
 
   // ============================================================
-  // TIMELINE ARCHITECTURE:
-  // 0.00 - 0.20: PURE VIDEO. NO TITLES. ZERO TEXT OVERLAY.
-  // 0.20 - 0.50: Video scales and moves out of the way.
-  // 0.50 - 0.70: Titles and editorial content arrive in the cleared space.
-  // 0.70 - 0.88: Reading lock.
-  // 0.88 - 1.00: Exit & cover.
-  // ============================================================
-
   // DESKTOP TRANSFORMS (>= 768px Viewports)
+  // ============================================================
   const desktopVideoWidth = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["100vw", "48vw"]
   );
   const desktopVideoHeight = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["100vh", "65vh"]
   );
   const desktopVideoRadius = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["0px", "16px"]
   );
   const desktopVideoX = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["0vw", reverse ? "24vw" : "-24vw"]
   );
 
-  // Desktop Content: ONLY fades in AFTER the video has moved out of the way
   const desktopContentOpacity = useTransform(
     scrollYProgress,
-    [0.48, 0.68],
+    [0.32, 0.55],
     [0, 1]
   );
   const desktopContentY = useTransform(
     scrollYProgress,
-    [0.48, 0.68],
-    [50, 0]
+    [0.32, 0.55],
+    [60, 0]
   );
   const desktopContentDisplay = useTransform(scrollYProgress, (val) =>
-    val < 0.42 ? "none" : "flex"
+    val < 0.22 ? "none" : "flex"
   );
 
+  // ============================================================
   // MOBILE TRANSFORMS (< 768px Anamorphic Screening Room)
+  // ============================================================
   const mobileVideoScale = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     [1.0, 0.88]
   );
   const mobileVideoRadius = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     [0, 16]
   );
   const mobileVideoY = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["0dvh", "-14dvh"]
   );
   const mobileVideoBorder = useTransform(
     scrollYProgress,
-    [0.18, 0.48],
+    [0.25, 0.55],
     ["rgba(255,255,255,0)", "rgba(255,255,255,0.12)"]
   );
 
-  // Mobile Content: ONLY fades in AFTER the video has recessed upward
+  const mobileHudOpacity = useTransform(
+    scrollYProgress,
+    [0.15, 0.30],
+    [1, 0]
+  );
+
   const mobileContentOpacity = useTransform(
     scrollYProgress,
-    [0.48, 0.68],
+    [0.35, 0.55],
     [0, 1]
   );
   const mobileContentY = useTransform(
     scrollYProgress,
-    [0.48, 0.68],
-    [50, 0]
+    [0.35, 0.55],
+    [60, 0]
   );
   const mobileContentDisplay = useTransform(scrollYProgress, (val) =>
-    val < 0.42 ? "none" : "flex"
+    val < 0.22 ? "none" : "flex"
   );
 
-  // Minimal Scroll Indicator (Fades out immediately as user scrolls)
-  const scrollPromptOpacity = useTransform(
-    scrollYProgress,
-    [0.02, 0.15],
-    [1, 0]
-  );
-
-  // Exit & Cover Scale (0.88 -> 1.00)
+  // ============================================================
+  // PHASE 4: EXIT & COVER SCALE (0.88 -> 1.00)
+  // ============================================================
   const stageScale = useTransform(scrollYProgress, [0.88, 1.0], [1, 0.96]);
 
   return (
@@ -151,22 +145,12 @@ export function ShowcaseItem({
         {/* Ambient Film Grain & Radial Backdrop */}
         <div className="absolute inset-0 pointer-events-none z-0 bg-radial from-transparent via-[#050A1A]/30 to-[#050A1A]/85" />
 
-        {/* Minimal Scroll Hint at the very bottom edge (Fades out immediately upon first scroll) */}
-        <motion.div
-          style={{ opacity: scrollPromptOpacity }}
-          className="absolute bottom-6 sm:bottom-8 left-0 right-0 z-30 flex justify-center pointer-events-none"
-        >
-          <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.25em] text-slate-400/80 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10">
-            Scroll to Direct ↓
-          </span>
-        </motion.div>
-
         {isDesktop ? (
           // ==========================================================
           // DESKTOP LAYOUT (>= 768px)
           // ==========================================================
           <div className="relative w-full h-full flex items-center justify-center">
-            {/* Morphing Video Player (Starts 100% Clean Full-Bleed, Zero Titles) */}
+            {/* Morphing Video Player (Starts Full-Bleed, Scales & Shifts) */}
             <motion.div
               style={{
                 width: desktopVideoWidth,
@@ -187,9 +171,15 @@ export function ShowcaseItem({
               >
                 <source src={videoSrc} type="video/mp4" />
               </video>
+
+              {/* Minimal Live Status Tag */}
+              <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1 rounded-full bg-[#050A1A]/75 backdrop-blur-md border border-white/10 text-[11px] font-mono text-white/90">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00E575] animate-pulse" />
+                <span>4K CINEMA MASTER</span>
+              </div>
             </motion.div>
 
-            {/* Editorial Content: ONLY appears when scrolling down, on the opposite side */}
+            {/* Editorial Content (Reveals on the opposite side on scroll) */}
             <motion.div
               style={{
                 opacity: desktopContentOpacity,
@@ -215,7 +205,7 @@ export function ShowcaseItem({
                 ))}
               </div>
 
-              {/* Title: Reveals cleanly in the open space */}
+              {/* Title */}
               <h3 className="text-3xl md:text-5xl font-bold font-display text-[#EDEDED] tracking-tight mb-4 leading-tight">
                 {title}
               </h3>
@@ -242,12 +232,26 @@ export function ShowcaseItem({
           // MOBILE ANAMORPHIC SCREENING ROOM (< 768px Viewports)
           // ==========================================================
           <div className="relative w-full h-full flex flex-col justify-center items-center px-0">
-            {/* Ambient Glow behind the video */}
+            {/* Upper Matte HUD */}
+            <motion.div
+              style={{ opacity: mobileHudOpacity }}
+              className="absolute top-8 left-6 right-6 flex justify-between items-center pointer-events-none z-20"
+            >
+              <span className="font-mono text-[10px] text-[#00E575] tracking-widest uppercase flex items-center gap-1.5 font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00E575] animate-pulse" />
+                {category}
+              </span>
+              <span className="font-mono text-[10px] text-slate-400 tracking-wider">
+                [ 16:9 DCI MASTER ]
+              </span>
+            </motion.div>
+
+            {/* Ambient Glow (Eliminates dead letterbox feel) */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 blur-3xl">
               <div className="w-[80vw] h-[45vw] bg-gradient-to-tr from-[#1E3A8A] to-[#00E575] rounded-full" />
             </div>
 
-            {/* 16:9 Cinematic Video Container (Edge-to-Edge 100vw, Zero Cropping, Zero Titles) */}
+            {/* 16:9 Cinematic Video Container (Edge-to-Edge 100vw, Zero Cropping) */}
             <motion.div
               style={{
                 scale: mobileVideoScale,
@@ -270,7 +274,17 @@ export function ShowcaseItem({
               </video>
             </motion.div>
 
-            {/* Editorial Content: ONLY appears when scrolling down, in the space below */}
+            {/* Lower Matte HUD: Prompt */}
+            <motion.div
+              style={{ opacity: mobileHudOpacity }}
+              className="absolute bottom-10 left-0 right-0 text-center pointer-events-none z-20"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400">
+                SCROLL TO DIRECT ↓
+              </span>
+            </motion.div>
+
+            {/* Editorial Content (Revealed in the space below on scroll) */}
             <motion.div
               style={{
                 opacity: mobileContentOpacity,
@@ -279,11 +293,6 @@ export function ShowcaseItem({
               }}
               className="absolute bottom-8 left-6 right-6 z-20 flex flex-col gap-3 pointer-events-auto text-left"
             >
-              <span className="font-mono text-[10px] text-[#00E575] tracking-widest uppercase flex items-center gap-1.5 font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00E575] animate-pulse" />
-                {category}
-              </span>
-
               {/* Specs Pills */}
               <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
                 {specs.map((spec: string) => (
@@ -296,7 +305,7 @@ export function ShowcaseItem({
                 ))}
               </div>
 
-              {/* Title: Appears in the cleared space below */}
+              {/* Title */}
               <h3 className="text-2xl font-bold font-display text-[#EDEDED] tracking-tight leading-snug">
                 {title}
               </h3>
