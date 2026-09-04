@@ -2,8 +2,8 @@
 
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { ShowcaseSection } from "@/components/ShowcaseSection";
 import { Manifesto } from "@/components/Manifesto";
-import { Capabilities } from "@/components/Capabilities";
 import { Metrics } from "@/components/Metrics";
 import { Footer } from "@/components/Footer";
 import { DirectCommsWidget } from "@/components/DirectCommsWidget";
@@ -22,16 +22,18 @@ export default function Home() {
       <Header onInitiateClick={scrollToTerminal} />
 
       {/* Section 1: Zero-Border Hero */}
-      <Hero onScrollClick={() => {
-        const manifesto = document.getElementById("manifesto");
-        manifesto?.scrollIntoView({ behavior: "smooth" });
-      }} />
+      <Hero
+        onScrollClick={() => {
+          const capabilities = document.getElementById("capabilities");
+          capabilities?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
 
-      {/* Section 2: Kinetic Manifesto */}
+      {/* Section 2: Apple-Style Sticky Scrub Showcase (Zero-Border Morph) */}
+      <ShowcaseSection />
+
+      {/* Section 3: Kinetic Manifesto */}
       <Manifesto />
-
-      {/* Section 3: Full-Bleed Capabilities Matrix */}
-      <Capabilities />
 
       {/* Section 4: Performance Metrics & Proof Matrix */}
       <Metrics />

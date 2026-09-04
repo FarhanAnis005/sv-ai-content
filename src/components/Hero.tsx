@@ -26,7 +26,7 @@ export function Hero({ onScrollClick }: HeroProps) {
     if (onScrollClick) {
       onScrollClick();
     } else {
-      const nextSection = document.getElementById("manifesto");
+      const nextSection = document.getElementById("capabilities");
       if (nextSection) {
         nextSection.scrollIntoView({ behavior: "smooth" });
       }
