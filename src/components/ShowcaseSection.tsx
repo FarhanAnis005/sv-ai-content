@@ -55,73 +55,101 @@ const SHOWCASE_ITEMS: ShowcaseData[] = [
   },
 ];
 
-interface ShowcaseSlideProps {
+interface DesktopShowcaseSlideProps {
   item: ShowcaseData;
   index: number;
   total: number;
-  videoY: MotionValue<string>;
+  videoX: MotionValue<string>;
   videoScale: MotionValue<number>;
   videoOpacity: MotionValue<number>;
-  textY: MotionValue<string>;
+  textX: MotionValue<string>;
   textOpacity: MotionValue<number>;
-  isDesktop: boolean;
+  reverse?: boolean;
 }
 
 // ============================================================================
-// DESKTOP SLIDE (>= 768px): Monumental Widescreen Cinema Theater
+// DESKTOP SLIDE (>= 768px): Apple Kinetic Side-Shift Theater
+// • Starts: Large Form Factor & Centered (x: 0%, scale: 1.0)
+// • On Scroll: Video glides to side (x: 24% or -24%, scale: 0.74)
+// • Text Reveal: In the cleared space, text fades & glides in
 // ============================================================================
 function DesktopShowcaseSlide({
   item,
   index,
   total,
-  videoY,
+  videoX,
   videoScale,
   videoOpacity,
-  textY,
+  textX,
   textOpacity,
-}: Omit<ShowcaseSlideProps, "isDesktop">) {
+  reverse = false,
+}: DesktopShowcaseSlideProps) {
   return (
-    <div className="relative z-10 w-full mx-auto px-8 lg:px-12 flex flex-col justify-center items-center pointer-events-auto h-full py-6 lg:py-8">
-      {/* 1. TOP STAGE: Eyebrow, Master Headline & Live Codec Badge */}
+    <div className="relative z-10 w-full max-w-7xl mx-auto px-8 lg:px-12 flex items-center justify-center pointer-events-auto h-full">
+      {/* 1. EDITORIAL TEXT: Appears in the opened negative space */}
       <motion.div
         style={{
-          y: textY,
+          x: textX,
           opacity: textOpacity,
         }}
-        className="w-full max-w-[min(1152px,calc((100dvh-190px)*16/9))] flex items-end justify-between mb-3 lg:mb-4 will-change-transform transform-gpu"
+        className={`absolute ${
+          reverse
+            ? "right-8 lg:right-16 text-left"
+            : "left-8 lg:left-16 text-left"
+        } max-w-md lg:max-w-lg z-20 flex flex-col justify-center will-change-transform transform-gpu`}
       >
-        <div className="flex flex-col gap-1 text-left">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00E575] animate-pulse" />
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#00E575] font-semibold">
-              {item.category}
-            </span>
-          </div>
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#EDEDED] tracking-tight leading-none mt-0.5">
-            {item.title}
-          </h3>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00E575] animate-pulse" />
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#00E575] font-semibold">
+            {item.category}
+          </span>
+          <span className="font-mono text-xs text-slate-500 ml-2">
+            0{index + 1} // 0{total}
+          </span>
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-xs text-slate-400">
-          <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[#00E575] text-[11px] font-semibold tracking-wider">
-            4K DCI MASTER
-          </span>
-          <span className="text-slate-500">0{index + 1} // 0{total}</span>
+        <h3 className="text-3xl lg:text-5xl font-bold font-display text-[#EDEDED] tracking-tight mb-4 leading-tight">
+          {item.title}
+        </h3>
+
+        <p className="text-slate-300 text-sm lg:text-base leading-relaxed mb-6 font-sans">
+          {item.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {item.specs.map((spec) => (
+            <span
+              key={spec}
+              className="font-mono text-xs uppercase tracking-wider px-3.5 py-1.5 bg-[#0A112A] border border-white/10 text-slate-300 rounded-lg shadow-sm"
+            >
+              {spec}
+            </span>
+          ))}
         </div>
+
+        <Link
+          href={`/work/${item.slug}`}
+          className="self-start inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EDEDED] text-[#050A1A] font-semibold text-xs uppercase tracking-wider hover:bg-[#00E575] hover:text-[#050A1A] transition-all duration-300 shadow-lg cursor-pointer group"
+        >
+          <span>Explore Sector</span>
+          <span className="group-hover:translate-x-0.5 transition-transform font-mono font-bold">
+            [ + ]
+          </span>
+        </Link>
       </motion.div>
 
-      {/* 2. CENTER STAGE: Monumental 16:9 Cinema Monitor */}
+      {/* 2. THE CINEMA MONITOR: Starts large and centered, then shifts to the side */}
       <motion.div
         style={{
-          y: videoY,
+          x: videoX,
           scale: videoScale,
           opacity: videoOpacity,
         }}
-        className="relative w-full max-w-[min(1152px,calc((100dvh-190px)*16/9))] aspect-video rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] border border-white/15 bg-canvas-surface group will-change-transform transform-gpu my-1"
+        className="relative w-full max-w-[min(1152px,calc((100dvh-160px)*16/9))] aspect-video rounded-3xl overflow-hidden shadow-[0_35px_100px_rgba(0,0,0,0.95)] border border-white/15 bg-canvas-surface group will-change-transform transform-gpu"
       >
-        {/* Ambient Bloom Backdrop */}
+        {/* Ambient Backlight Bloom */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
-          <div className="w-[115%] h-[115%] bg-gradient-to-tr from-[#1E3A8A]/50 via-[#00E575]/25 to-transparent rounded-full blur-3xl opacity-60 transform-gpu" />
+          <div className="w-[120%] h-[120%] bg-gradient-to-tr from-[#1E3A8A]/50 via-[#00E575]/25 to-transparent rounded-full blur-3xl opacity-60 transform-gpu" />
         </div>
 
         <video
@@ -146,45 +174,19 @@ function DesktopShowcaseSlide({
           <span>60 FPS • PRORES 4444</span>
         </div>
       </motion.div>
-
-      {/* 3. BOTTOM STAGE: Studio Telemetry & Action Bar */}
-      <motion.div
-        style={{
-          y: textY,
-          opacity: textOpacity,
-        }}
-        className="w-full max-w-[min(1152px,calc((100dvh-190px)*16/9))] flex items-center justify-between mt-3 lg:mt-4 will-change-transform transform-gpu"
-      >
-        {/* Left: Punchy One-Line Synopsis */}
-        <p className="text-slate-300 text-sm lg:text-base font-sans leading-relaxed max-w-md text-left">
-          {item.description}
-        </p>
-
-        {/* Center: Specs Badges */}
-        <div className="flex items-center gap-2">
-          {item.specs.map((spec) => (
-            <span
-              key={spec}
-              className="font-mono text-xs uppercase tracking-wider px-3.5 py-1.5 bg-[#0A112A] border border-white/10 text-slate-300 rounded-lg shadow-sm"
-            >
-              {spec}
-            </span>
-          ))}
-        </div>
-
-        {/* Right: Sleek Action Button */}
-        <Link
-          href={`/work/${item.slug}`}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#EDEDED] text-[#050A1A] font-semibold text-xs uppercase tracking-wider hover:bg-[#00E575] hover:text-[#050A1A] transition-all duration-300 shadow-lg cursor-pointer group"
-        >
-          <span>Explore Sector</span>
-          <span className="group-hover:translate-x-0.5 transition-transform font-mono font-bold">
-            [ + ]
-          </span>
-        </Link>
-      </motion.div>
     </div>
   );
+}
+
+interface MobileShowcaseSlideProps {
+  item: ShowcaseData;
+  index: number;
+  total: number;
+  videoY: MotionValue<string>;
+  videoScale: MotionValue<number>;
+  videoOpacity: MotionValue<number>;
+  textY: MotionValue<string>;
+  textOpacity: MotionValue<number>;
 }
 
 // ============================================================================
@@ -199,7 +201,7 @@ function MobileShowcaseSlide({
   videoOpacity,
   textY,
   textOpacity,
-}: Omit<ShowcaseSlideProps, "isDesktop">) {
+}: MobileShowcaseSlideProps) {
   return (
     <div className="relative w-full h-full flex flex-col justify-center items-center px-4 pt-14 pb-5 z-10 max-w-lg mx-auto pointer-events-auto">
       {/* 1. TOP ZONE: Eyebrow & Master Headline (Floats UP on scroll) */}
@@ -311,21 +313,10 @@ function MobileShowcaseSlide({
   );
 }
 
-function ShowcaseSlide(props: ShowcaseSlideProps) {
-  return (
-    <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
-      {props.isDesktop ? (
-        <DesktopShowcaseSlide {...props} />
-      ) : (
-        <MobileShowcaseSlide {...props} />
-      )}
-    </div>
-  );
-}
-
 export function ShowcaseSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(true);
+  const [activeChapter, setActiveChapter] = useState(0);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
@@ -346,117 +337,280 @@ export function ShowcaseSection() {
     restDelta: 0.001,
   });
 
-  // ============================================================
-  // STAGGERED KINETIC CASCADE CHOREOGRAPHY
-  //
-  // Chapter 0 (Synthetic Humans):
-  // • Locked 0.00 -> 0.22
-  // • Text 0 floats up & dissolves: 0.20 -> 0.34
-  // • Video 0 recedes/dims: 0.26 -> 0.42
-  //
-  // Chapter 1 (Neural Environments):
-  // • Video 1 glides up from bottom: 0.26 -> 0.42
-  // • Text 1 docks into place: 0.38 -> 0.48
-  // • Locked 0.48 -> 0.64
-  // • Text 1 floats up & dissolves: 0.64 -> 0.76
-  // • Video 1 recedes/dims: 0.68 -> 0.84
-  //
-  // Chapter 2 (Dynamic Physics):
-  // • Video 2 glides up from bottom: 0.68 -> 0.84
-  // • Text 2 docks into place: 0.80 -> 0.90
-  // • Locked 0.90 -> 1.00
-  // ============================================================
+  // Track active chapter for the Apple Pill Scrubber
+  useEffect(() => {
+    return smoothProgress.on("change", (v) => {
+      if (v < 0.33) {
+        setActiveChapter(0);
+      } else if (v < 0.66) {
+        setActiveChapter(1);
+      } else {
+        setActiveChapter(2);
+      }
+    });
+  }, [smoothProgress]);
 
-  // Slide 0 Transforms
-  const text0Y = useTransform(smoothProgress, [0.20, 0.34], ["0px", "-70px"]);
-  const text0Opacity = useTransform(smoothProgress, [0.20, 0.32], [1, 0]);
-  const video0Y = useTransform(smoothProgress, [0.26, 0.42], ["0%", "-6%"]);
-  const video0Scale = useTransform(smoothProgress, [0.26, 0.42], [1.0, 0.94]);
-  const video0Opacity = useTransform(smoothProgress, [0.26, 0.42], [1.0, 0.25]);
+  const handleJumpToChapter = (chapterIndex: number) => {
+    if (!containerRef.current) return;
+    const targets = [0.05, 0.45, 0.85];
+    const top =
+      containerRef.current.offsetTop +
+      (containerRef.current.scrollHeight - window.innerHeight) *
+        targets[chapterIndex];
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
-  // Slide 1 Transforms
-  const video1Y = useTransform(
+  // ============================================================
+  // DESKTOP KINETIC SIDE-SHIFT TRANSFORMS (>= 768px)
+  //
+  // Chapter 0: Starts Large & Centered -> Shifts Right -> Text Reveals on Left
+  // ============================================================
+  const desktopVideo0X = useTransform(
     smoothProgress,
-    [0.26, 0.42, 0.68, 0.84],
-    ["100%", "0%", "0%", "-6%"]
+    [0.00, 0.08, 0.20, 0.30],
+    ["0%", "0%", "24%", "24%"]
   );
-  const video1Scale = useTransform(
+  const desktopVideo0Scale = useTransform(
     smoothProgress,
-    [0.26, 0.42, 0.68, 0.84],
-    [0.94, 1.0, 1.0, 0.94]
+    [0.00, 0.08, 0.20, 0.30],
+    [1.0, 1.0, 0.74, 0.74]
   );
-  const video1Opacity = useTransform(
+  const desktopVideo0Opacity = useTransform(
     smoothProgress,
-    [0.26, 0.36, 0.68, 0.84],
-    [0, 1.0, 1.0, 0.25]
+    [0.00, 0.28, 0.34],
+    [1.0, 1.0, 0]
   );
-  const text1Y = useTransform(
+  const desktopText0X = useTransform(
     smoothProgress,
-    [0.38, 0.48, 0.64, 0.76],
-    ["50px", "0px", "0px", "-70px"]
+    [0.00, 0.10, 0.20, 0.30],
+    ["-40px", "-40px", "0px", "0px"]
   );
-  const text1Opacity = useTransform(
+  const desktopText0Opacity = useTransform(
     smoothProgress,
-    [0.38, 0.46, 0.64, 0.74],
+    [0.00, 0.10, 0.20, 0.28, 0.34],
+    [0, 0, 1.0, 1.0, 0]
+  );
+
+  // Chapter 1: Enters Large & Centered -> Shifts Left -> Text Reveals on Right
+  const desktopVideo1Opacity = useTransform(
+    smoothProgress,
+    [0.28, 0.34, 0.60, 0.66],
+    [0, 1.0, 1.0, 0]
+  );
+  const desktopVideo1Scale = useTransform(
+    smoothProgress,
+    [0.28, 0.34, 0.42, 0.52],
+    [1.0, 1.0, 1.0, 0.74]
+  );
+  const desktopVideo1X = useTransform(
+    smoothProgress,
+    [0.28, 0.34, 0.42, 0.52],
+    ["0%", "0%", "0%", "-24%"]
+  );
+  const desktopText1X = useTransform(
+    smoothProgress,
+    [0.40, 0.52],
+    ["40px", "0px"]
+  );
+  const desktopText1Opacity = useTransform(
+    smoothProgress,
+    [0.40, 0.50, 0.60, 0.66],
     [0, 1.0, 1.0, 0]
   );
 
-  // Slide 2 Transforms
-  const video2Y = useTransform(smoothProgress, [0.68, 0.84], ["100%", "0%"]);
-  const video2Scale = useTransform(smoothProgress, [0.68, 0.84], [0.94, 1.0]);
-  const video2Opacity = useTransform(smoothProgress, [0.68, 0.78], [0, 1.0]);
-  const text2Y = useTransform(smoothProgress, [0.80, 0.90], ["50px", "0px"]);
-  const text2Opacity = useTransform(smoothProgress, [0.80, 0.88], [0, 1.0]);
+  // Chapter 2: Enters Large & Centered -> Shifts Right -> Text Reveals on Left
+  const desktopVideo2Opacity = useTransform(
+    smoothProgress,
+    [0.62, 0.68],
+    [0, 1.0]
+  );
+  const desktopVideo2Scale = useTransform(
+    smoothProgress,
+    [0.62, 0.72, 0.82],
+    [1.0, 1.0, 0.74]
+  );
+  const desktopVideo2X = useTransform(
+    smoothProgress,
+    [0.62, 0.72, 0.82],
+    ["0%", "0%", "24%"]
+  );
+  const desktopText2X = useTransform(
+    smoothProgress,
+    [0.72, 0.82],
+    ["-40px", "0px"]
+  );
+  const desktopText2Opacity = useTransform(
+    smoothProgress,
+    [0.72, 0.82],
+    [0, 1.0]
+  );
+
+  // ============================================================
+  // MOBILE VERTICAL CASCADE TRANSFORMS (< 768px)
+  // 100% Preserved Handheld Portrait Stack
+  // ============================================================
+  const mobileVideo0Y = useTransform(smoothProgress, [0.24, 0.34], ["0%", "-6%"]);
+  const mobileVideo0Scale = useTransform(smoothProgress, [0.24, 0.34], [1.0, 0.94]);
+  const mobileVideo0Opacity = useTransform(smoothProgress, [0.24, 0.34], [1.0, 0.25]);
+  const mobileText0Y = useTransform(smoothProgress, [0.20, 0.32], ["0px", "-70px"]);
+  const mobileText0Opacity = useTransform(smoothProgress, [0.20, 0.32], [1.0, 0]);
+
+  const mobileVideo1Y = useTransform(
+    smoothProgress,
+    [0.26, 0.38, 0.60, 0.70],
+    ["100%", "0%", "0%", "-6%"]
+  );
+  const mobileVideo1Scale = useTransform(
+    smoothProgress,
+    [0.26, 0.38, 0.60, 0.70],
+    [0.94, 1.0, 1.0, 0.94]
+  );
+  const mobileVideo1Opacity = useTransform(
+    smoothProgress,
+    [0.26, 0.34, 0.60, 0.70],
+    [0, 1.0, 1.0, 0.25]
+  );
+  const mobileText1Y = useTransform(
+    smoothProgress,
+    [0.36, 0.44, 0.58, 0.68],
+    ["50px", "0px", "0px", "-70px"]
+  );
+  const mobileText1Opacity = useTransform(
+    smoothProgress,
+    [0.36, 0.44, 0.58, 0.68],
+    [0, 1.0, 1.0, 0]
+  );
+
+  const mobileVideo2Y = useTransform(smoothProgress, [0.64, 0.76], ["100%", "0%"]);
+  const mobileVideo2Scale = useTransform(smoothProgress, [0.64, 0.76], [0.94, 1.0]);
+  const mobileVideo2Opacity = useTransform(smoothProgress, [0.64, 0.72], [0, 1.0]);
+  const mobileText2Y = useTransform(smoothProgress, [0.74, 0.84], ["50px", "0px"]);
+  const mobileText2Opacity = useTransform(smoothProgress, [0.74, 0.84], [0, 1.0]);
 
   return (
     <section
       ref={containerRef}
       id="capabilities"
-      className="relative h-[350vh] w-full bg-[#050A1A]"
+      className="relative h-[450vh] w-full bg-[#050A1A]"
     >
-      {/* Pinned Viewport Stage: Stays locked at top: 0 throughout the entire showcase */}
+      {/* Pinned Viewport Stage */}
       <div className="sticky top-0 h-[100dvh] w-screen max-w-full overflow-hidden bg-[#050A1A] flex items-center justify-center select-none">
         {/* Ambient Radial Vignette */}
         <div className="absolute inset-0 pointer-events-none z-0 bg-radial from-transparent via-[#050A1A]/30 to-[#050A1A]/85" />
 
-        {/* Slide 0: Synthetic Humans */}
-        <ShowcaseSlide
-          item={SHOWCASE_ITEMS[0]}
-          index={0}
-          total={3}
-          videoY={video0Y}
-          videoScale={video0Scale}
-          videoOpacity={video0Opacity}
-          textY={text0Y}
-          textOpacity={text0Opacity}
-          isDesktop={isDesktop}
-        />
+        {/* Apple-Style Glass Chapter Pill Scrubber (Desktop Only) */}
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto hidden md:flex items-center gap-1.5 p-1.5 rounded-full bg-[#050A1A]/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+          {SHOWCASE_ITEMS.map((item, idx) => (
+            <button
+              key={item.slug}
+              onClick={() => handleJumpToChapter(idx)}
+              className={`px-4 py-1.5 rounded-full font-mono text-xs transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                activeChapter === idx
+                  ? "bg-[#00E575]/15 text-[#00E575] border border-[#00E575]/40 shadow-[0_0_12px_rgba(0,229,117,0.25)] font-semibold"
+                  : "text-slate-400 hover:text-white border border-transparent"
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  activeChapter === idx
+                    ? "bg-[#00E575] animate-pulse"
+                    : "bg-slate-500"
+                }`}
+              />
+              <span>{item.category.replace(/^\d+\s*\/\/\s*/, "")}</span>
+            </button>
+          ))}
+        </div>
 
-        {/* Slide 1: Neural Environments */}
-        <ShowcaseSlide
-          item={SHOWCASE_ITEMS[1]}
-          index={1}
-          total={3}
-          videoY={video1Y}
-          videoScale={video1Scale}
-          videoOpacity={video1Opacity}
-          textY={text1Y}
-          textOpacity={text1Opacity}
-          isDesktop={isDesktop}
-        />
+        {/* ============================================================ */}
+        {/* SLIDE 0: Synthetic Humans                                   */}
+        {/* ============================================================ */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+          {isDesktop ? (
+            <DesktopShowcaseSlide
+              item={SHOWCASE_ITEMS[0]}
+              index={0}
+              total={3}
+              videoX={desktopVideo0X}
+              videoScale={desktopVideo0Scale}
+              videoOpacity={desktopVideo0Opacity}
+              textX={desktopText0X}
+              textOpacity={desktopText0Opacity}
+              reverse={false}
+            />
+          ) : (
+            <MobileShowcaseSlide
+              item={SHOWCASE_ITEMS[0]}
+              index={0}
+              total={3}
+              videoY={mobileVideo0Y}
+              videoScale={mobileVideo0Scale}
+              videoOpacity={mobileVideo0Opacity}
+              textY={mobileText0Y}
+              textOpacity={mobileText0Opacity}
+            />
+          )}
+        </div>
 
-        {/* Slide 2: Dynamic Physics */}
-        <ShowcaseSlide
-          item={SHOWCASE_ITEMS[2]}
-          index={2}
-          total={3}
-          videoY={video2Y}
-          videoScale={video2Scale}
-          videoOpacity={video2Opacity}
-          textY={text2Y}
-          textOpacity={text2Opacity}
-          isDesktop={isDesktop}
-        />
+        {/* ============================================================ */}
+        {/* SLIDE 1: Neural Environments                                */}
+        {/* ============================================================ */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+          {isDesktop ? (
+            <DesktopShowcaseSlide
+              item={SHOWCASE_ITEMS[1]}
+              index={1}
+              total={3}
+              videoX={desktopVideo1X}
+              videoScale={desktopVideo1Scale}
+              videoOpacity={desktopVideo1Opacity}
+              textX={desktopText1X}
+              textOpacity={desktopText1Opacity}
+              reverse={true}
+            />
+          ) : (
+            <MobileShowcaseSlide
+              item={SHOWCASE_ITEMS[1]}
+              index={1}
+              total={3}
+              videoY={mobileVideo1Y}
+              videoScale={mobileVideo1Scale}
+              videoOpacity={mobileVideo1Opacity}
+              textY={mobileText1Y}
+              textOpacity={mobileText1Opacity}
+            />
+          )}
+        </div>
+
+        {/* ============================================================ */}
+        {/* SLIDE 2: Dynamic Physics                                    */}
+        {/* ============================================================ */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+          {isDesktop ? (
+            <DesktopShowcaseSlide
+              item={SHOWCASE_ITEMS[2]}
+              index={2}
+              total={3}
+              videoX={desktopVideo2X}
+              videoScale={desktopVideo2Scale}
+              videoOpacity={desktopVideo2Opacity}
+              textX={desktopText2X}
+              textOpacity={desktopText2Opacity}
+              reverse={false}
+            />
+          ) : (
+            <MobileShowcaseSlide
+              item={SHOWCASE_ITEMS[2]}
+              index={2}
+              total={3}
+              videoY={mobileVideo2Y}
+              videoScale={mobileVideo2Scale}
+              videoOpacity={mobileVideo2Opacity}
+              textY={mobileText2Y}
+              textOpacity={mobileText2Opacity}
+            />
+          )}
+        </div>
       </div>
     </section>
   );
